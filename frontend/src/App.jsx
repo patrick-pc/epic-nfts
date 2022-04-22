@@ -13,6 +13,7 @@ const CONTRACT_ADDRESS = '0xD61B1D54B699362fd9C88Ae108aDFbc577809dC5'
 
 function App() {
   const [currentAccount, setCurrentAccount] = useState('')
+  const [isMining, setIsMining] = useState(false)
 
   const checkIfWalletIsConnected = async () => {
     const { ethereum } = window
@@ -24,7 +25,7 @@ function App() {
     const rinkebyChainId = '0x4'
     if (chainId !== rinkebyChainId) {
       alert('You are not connected to the Rinkeby Test Network!')
-      return;
+      return
     }
 
     if (!ethereum) {
@@ -104,7 +105,7 @@ function App() {
       const rinkebyChainId = '0x4'
       if (chainId !== rinkebyChainId) {
         alert('You are not connected to the Rinkeby Test Network!')
-        return;
+        return
       }
 
       if (ethereum) {
@@ -120,7 +121,9 @@ function App() {
         let nftTxn = await connectedContract.makeAnEpicNFT()
 
         console.log('Mining...please wait.')
+        setIsMining(true)
         await nftTxn.wait()
+        setIsMining(false)
 
         console.log(
           `Mined, see transaction: https://rinkeby.etherscan.io/tx/${nftTxn.hash}`
@@ -146,8 +149,9 @@ function App() {
     <button
       onClick={askContractToMintNft}
       className="cta-button connect-wallet-button"
+      disabled={isMining}
     >
-      Mint NFT
+      {isMining ? 'Mining...' : 'Mint NFT'}
     </button>
   )
 
