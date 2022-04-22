@@ -5,15 +5,17 @@ import './App.css'
 import twitterLogo from './twitter-logo.svg'
 
 // Constants
-const TWITTER_HANDLE = '_buildspace'
+const TWITTER_HANDLE = 'web3slinger'
 const TWITTER_LINK = `https://twitter.com/${TWITTER_HANDLE}`
 const OPENSEA_LINK = ''
 const TOTAL_MINT_COUNT = 50
 const CONTRACT_ADDRESS = '0xD61B1D54B699362fd9C88Ae108aDFbc577809dC5'
+const COLLECTION_SLUG = 'squarenft-agffrxbtxh'
 
 function App() {
   const [currentAccount, setCurrentAccount] = useState('')
   const [isMining, setIsMining] = useState(false)
+  const [mintCount, setMintCount] = useState(0)
 
   const checkIfWalletIsConnected = async () => {
     const { ethereum } = window
@@ -80,6 +82,7 @@ function App() {
 
         connectedContract.on('NewEpicNFTMinted', (from, tokenId) => {
           console.log(from, tokenId.toNumber())
+          setMintCount(tokenId.toNumber())
           alert(
             `Hey there! We've minted your NFT and sent it to your wallet. It may be blank right now. It can take a max of 10 min to show up on OpenSea. Here's the link: https://testnets.opensea.io/assets/${CONTRACT_ADDRESS}/${tokenId.toNumber()}`
           )
@@ -146,13 +149,16 @@ function App() {
   )
 
   const renderMintUI = () => (
-    <button
-      onClick={askContractToMintNft}
-      className="cta-button connect-wallet-button"
-      disabled={isMining}
-    >
-      {isMining ? 'Mining...' : 'Mint NFT'}
-    </button>
+    <>
+      <div className='mint-count'>{mintCount} / 50 minted</div>
+      <button
+        onClick={askContractToMintNft}
+        className="cta-button connect-wallet-button"
+        disabled={isMining}
+      >
+        {isMining ? 'Mining...' : 'Mint NFT'}
+      </button>
+    </>
   )
 
   useEffect(() => {
@@ -170,6 +176,19 @@ function App() {
           {currentAccount === ''
             ? renderNotConnectedContainer()
             : renderMintUI()}
+          <br />
+          <a
+            href={`https://testnets.opensea.io/collection/${COLLECTION_SLUG}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <button
+              onClick={connectWallet}
+              className="cta-button opensea-button"
+            >
+              Browse Collection
+            </button>
+          </a>
         </div>
         <div className="footer-container">
           <img alt="Twitter Logo" className="twitter-logo" src={twitterLogo} />
@@ -178,7 +197,7 @@ function App() {
             href={TWITTER_LINK}
             target="_blank"
             rel="noreferrer"
-          >{`built on @${TWITTER_HANDLE}`}</a>
+          >{`built by @${TWITTER_HANDLE}`}</a>
         </div>
       </div>
     </div>
