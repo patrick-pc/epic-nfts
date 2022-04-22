@@ -9,12 +9,23 @@ const TWITTER_HANDLE = '_buildspace'
 const TWITTER_LINK = `https://twitter.com/${TWITTER_HANDLE}`
 const OPENSEA_LINK = ''
 const TOTAL_MINT_COUNT = 50
+const CONTRACT_ADDRESS = '0xD61B1D54B699362fd9C88Ae108aDFbc577809dC5'
 
 function App() {
   const [currentAccount, setCurrentAccount] = useState('')
 
   const checkIfWalletIsConnected = async () => {
     const { ethereum } = window
+
+    let chainId = await ethereum.request({ method: 'eth_chainId' })
+    console.log('Connected to chain ' + chainId)
+
+    // String, hex code of the chainId of the Rinkebey test network
+    const rinkebyChainId = '0x4'
+    if (chainId !== rinkebyChainId) {
+      alert('You are not connected to the Rinkeby Test Network!')
+      return;
+    }
 
     if (!ethereum) {
       console.log('Make sure you have metamask!')
@@ -83,10 +94,18 @@ function App() {
   }
 
   const askContractToMintNft = async () => {
-    const CONTRACT_ADDRESS = '0xD61B1D54B699362fd9C88Ae108aDFbc577809dC5'
-
     try {
       const { ethereum } = window
+
+      let chainId = await ethereum.request({ method: 'eth_chainId' })
+      console.log('Connected to chain ' + chainId)
+
+      // String, hex code of the chainId of the Rinkebey test network
+      const rinkebyChainId = '0x4'
+      if (chainId !== rinkebyChainId) {
+        alert('You are not connected to the Rinkeby Test Network!')
+        return;
+      }
 
       if (ethereum) {
         const provider = new ethers.providers.Web3Provider(ethereum)
