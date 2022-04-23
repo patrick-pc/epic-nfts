@@ -9,8 +9,8 @@ const TWITTER_HANDLE = 'web3slinger'
 const TWITTER_LINK = `https://twitter.com/${TWITTER_HANDLE}`
 const OPENSEA_LINK = ''
 const TOTAL_MINT_COUNT = 50
-const CONTRACT_ADDRESS = '0xD61B1D54B699362fd9C88Ae108aDFbc577809dC5'
-const COLLECTION_SLUG = 'squarenft-agffrxbtxh'
+const CONTRACT_ADDRESS = '0x0353F99f0dB15d5654E5ad2C805121dDD5b3B16b'
+const COLLECTION_SLUG = 'squarenft-u4z5d7dlkk'
 
 function App() {
   const [currentAccount, setCurrentAccount] = useState('')
@@ -82,8 +82,8 @@ function App() {
 
         connectedContract.on('NewEpicNFTMinted', (from, tokenId) => {
           console.log(from, tokenId.toNumber())
-          setMintCount(tokenId.toNumber())
-          alert(
+          setMintCount(tokenId.toNumber() + 1)
+          console.log(
             `Hey there! We've minted your NFT and sent it to your wallet. It may be blank right now. It can take a max of 10 min to show up on OpenSea. Here's the link: https://testnets.opensea.io/assets/${CONTRACT_ADDRESS}/${tokenId.toNumber()}`
           )
         })
@@ -150,11 +150,11 @@ function App() {
 
   const renderMintUI = () => (
     <>
-      <div className='mint-count'>{mintCount} / 50 minted</div>
+      <div className="mint-count">{mintCount} / 50 minted</div>
       <button
         onClick={askContractToMintNft}
         className="cta-button connect-wallet-button"
-        disabled={isMining}
+        disabled={isMining || mintCount >= TOTAL_MINT_COUNT}
       >
         {isMining ? 'Mining...' : 'Mint NFT'}
       </button>
